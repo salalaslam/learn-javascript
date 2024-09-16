@@ -53,8 +53,16 @@ export const fetchData = async (url: string) => {
         console.error('Error:', error.message);
         alert(`Error: ${error.message}`);
       }
+    } else if (error instanceof TypeError) {
+      // Handle TypeError
+      console.error('Type Error:', error.message);
+      alert('A type error occurred. Please check your code.');
+    } else if (error instanceof ReferenceError) {
+      // Handle ReferenceError
+      console.error('Reference Error:', error.message);
+      alert('A reference error occurred. Please check your code.');
     } else {
-      // Non-Axios error
+      // Non-Axios and non-specific error
       console.error('Unexpected Error:', error);
       alert('An unexpected error occurred.');
     }
