@@ -34,7 +34,30 @@ export const fetchData = async (url: string) => {
     console.log('Fetched data:', processedData);
   } catch (error) {
     // Error Handling
-    console.error('Error fetching data:', error);
+    if (axios.isAxiosError(error)) {
+      // Axios-specific error handling
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error(
+          'Server Error:',
+          error.response.status,
+          error.response.data
+        );
+        alert(`Server Error: ${error.response.status}`);
+      } else if (error.request) {
+        // Request was made but no response received
+        console.error('Network Error:', error.message);
+        alert('Network Error: Please check your internet connection.');
+      } else {
+        // Something happened in setting up the request
+        console.error('Error:', error.message);
+        alert(`Error: ${error.message}`);
+      }
+    } else {
+      // Non-Axios error
+      console.error('Unexpected Error:', error);
+      alert('An unexpected error occurred.');
+    }
 
     // Retry Logic (simple example)
     setTimeout(() => fetchData(url), 3000);
