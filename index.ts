@@ -65,14 +65,11 @@ export const fetchData = async (url: string) => {
   } catch (error) {
     if (error instanceof GetDataException) {
       console.error('GetDataException:', error.message);
-      alert(`Error fetching data: ${error.message}`);
     } else if (error instanceof ProcessDataException) {
       console.error('ProcessDataException:', error.message);
-      alert(`Error processing data: ${error.message}`);
     } else {
       // Handle unexpected errors
       console.error('Unexpected Error:', error);
-      alert('An unexpected error occurred.');
     }
 
     // Retry Logic (simple example)
