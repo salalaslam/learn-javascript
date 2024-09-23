@@ -11,13 +11,28 @@ interface Post {
   body: string;
 }
 
+// Custom exception classes
+class GetDataException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'GetDataException';
+  }
+}
+
+class ProcessDataException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ProcessDataException';
+  }
+}
+
 // Function to get data from the API
 const getData = async (url: string): Promise<Post> => {
   try {
     const response = await axios.get<Post>(url);
     return response.data;
   } catch (error) {
-    throw new Error(`Failed to fetch data: ${error.message}`);
+    throw new GetDataException(`Failed to fetch data: ${error.message}`);
   }
 };
 
@@ -29,7 +44,7 @@ const processData = (data: Post) => {
       title: data.title.toUpperCase(), // Example transformation
     };
   } catch (error) {
-    throw new Error(`Failed to process data: ${error.message}`);
+    throw new ProcessDataException(`Failed to process data: ${error.message}`);
   }
 };
 
@@ -48,36 +63,14 @@ export const fetchData = async (url: string) => {
     // Logging
     console.log('Fetched data:', processedData);
   } catch (error) {
-    // Error Handling
-    if (axios.isAxiosError(error)) {
-      // Axios-specific error handling
-      if (error.response) {
-        // Server responded with a status other than 2xx
-        console.error(
-          'Server Error:',
-          error.response.status,
-          error.response.data
-        );
-        alert(`Server Error: ${error.response.status}`);
-      } else if (error.request) {
-        // Request was made but no response received
-        console.error('Network Error:', error.message);
-        alert('Network Error: Please check your internet connection.');
-      } else {
-        // Something happened in setting up the request
-        console.error('Error:', error.message);
-        alert(`Error: ${error.message}`);
-      }
-    } else if (error instanceof TypeError) {
-      // Handle TypeError
-      console.error('Type Error:', error.message);
-      alert('A type error occurred. Please check your code.');
-    } else if (error instanceof ReferenceError) {
-      // Handle ReferenceError
-      console.error('Reference Error:', error.message);
-      alert('A reference error occurred. Please check your code.');
+    if (error instanceof GetDataException) {
+      console.error('GetDataException:', error.message);
+      alert(`Error fetching data: ${error.message}`);
+    } else if (error instanceof ProcessDataException) {
+      console.error('ProcessDataException:', error.message);
+      alert(`Error processing data: ${error.message}`);
     } else {
-      // Non-Axios and non-specific error
+      // Handle unexpected errors
       console.error('Unexpected Error:', error);
       alert('An unexpected error occurred.');
     }
