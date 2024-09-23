@@ -8,7 +8,7 @@ export const getData = async (url: string): Promise<Post> => {
     const response = await axios.get<Post>(url);
     return response.data;
   } catch (error) {
-    handleGetDataError(error);
+    return handleGetDataError(error);
   }
 };
 
