@@ -9,6 +9,8 @@ export const processData = (data: Post): Post => {
       title: data.title.toUpperCase(), // Example transformation
     };
   } catch (error) {
+    // Log the error before throwing
+    console.error('Error processing data:', error);
     throw new ProcessDataException(`Failed to process data: ${error.message}`);
   }
 };
