@@ -11,17 +11,24 @@ interface Post {
   body: string;
 }
 
+// Function to get data from the API
+const getData = async (url: string): Promise<Post> => {
+  const response = await axios.get<Post>(url);
+  return response.data;
+};
+
+// Function to process the data
+const processData = (data: Post) => {
+  return {
+    ...data,
+    title: data.title.toUpperCase(), // Example transformation
+  };
+};
+
 export const fetchData = async (url: string) => {
   try {
-    const response = await axios.get<Post>(url);
-    // Process the data
-    const data = response.data;
-
-    // Data Processing
-    const processedData = {
-      ...data,
-      title: data.title.toUpperCase(), // Example transformation
-    };
+    const data = await getData(url);
+    const processedData = processData(data);
 
     // UI Updates
     console.log('Title:', processedData.title);
