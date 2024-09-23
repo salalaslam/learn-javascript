@@ -5,7 +5,7 @@ import { processData } from './helper';
 // Sample API endpoint
 const url = 'https://jsonplaceholder.typicode.com/posts/1';
 
-const fetchData = async () => {
+const init = async () => {
   try {
     const data = await getData(url);
     const processedData = processData(data);
@@ -24,4 +24,4 @@ const fetchData = async () => {
   }
 };
 
-fetchData();
+init();
