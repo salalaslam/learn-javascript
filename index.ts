@@ -13,16 +13,24 @@ interface Post {
 
 // Function to get data from the API
 const getData = async (url: string): Promise<Post> => {
-  const response = await axios.get<Post>(url);
-  return response.data;
+  try {
+    const response = await axios.get<Post>(url);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch data: ${error.message}`);
+  }
 };
 
 // Function to process the data
 const processData = (data: Post) => {
-  return {
-    ...data,
-    title: data.title.toUpperCase(), // Example transformation
-  };
+  try {
+    return {
+      ...data,
+      title: data.title.toUpperCase(), // Example transformation
+    };
+  } catch (error) {
+    throw new Error(`Failed to process data: ${error.message}`);
+  }
 };
 
 export const fetchData = async (url: string) => {
