@@ -2,7 +2,7 @@ import { ProcessDataException } from './exceptions';
 import { Post } from './types';
 
 // Function to process the data
-export const processData = (data: Post) => {
+export const processData = (data: Post): Post => {
   try {
     return {
       ...data,
