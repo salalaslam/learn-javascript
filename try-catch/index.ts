@@ -1,64 +1,14 @@
-import axios from 'axios';
+import { getData } from './api';
+import { GetDataException, ProcessDataException } from './exceptions';
+import { processData } from './helper';
 
 // Sample API endpoint
 const url = 'https://jsonplaceholder.typicode.com/posts/1';
 
-// Define an interface for the response data
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
-
-// Custom exception classes
-class GetDataException extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'GetDataException';
-  }
-}
-
-class ProcessDataException extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ProcessDataException';
-  }
-}
-
-// Function to get data from the API
-const getData = async (url: string): Promise<Post> => {
-  try {
-    const response = await axios.get<Post>(url);
-    return response.data;
-  } catch (error) {
-    throw new GetDataException(`Failed to fetch data: ${error.message}`);
-  }
-};
-
-// Function to process the data
-const processData = (data: Post) => {
-  try {
-    return {
-      ...data,
-      title: data.title.toUpperCase(), // Example transformation
-    };
-  } catch (error) {
-    throw new ProcessDataException(`Failed to process data: ${error.message}`);
-  }
-};
-
-export const fetchData = async (url: string) => {
+const fetchData = async () => {
   try {
     const data = await getData(url);
     const processedData = processData(data);
-
-    // UI Updates
-    console.log('Title:', processedData.title);
-    console.log('Body:', processedData.body);
-
-    // Caching
-    localStorage.setItem('post', JSON.stringify(processedData));
 
     // Logging
     console.log('Fetched data:', processedData);
@@ -71,8 +21,7 @@ export const fetchData = async (url: string) => {
       // Handle unexpected errors
       console.error('Unexpected Error:', error);
     }
-
-    // Retry Logic (simple example)
-    setTimeout(() => fetchData(url), 3000);
   }
 };
+
+fetchData();
